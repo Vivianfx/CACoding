@@ -1,5 +1,8 @@
 package view;
 
+import interface_adapter.clear_users.ClearController;
+import interface_adapter.clear_users.ClearState;
+import interface_adapter.clear_users.ClearViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
@@ -12,15 +15,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
     public final String viewName = "sign up";
 
     private final SignupViewModel signupViewModel;
+    private final ClearViewModel clearViewModel;
     private final JTextField usernameInputField = new JTextField(15);
     private final JPasswordField passwordInputField = new JPasswordField(15);
     private final JPasswordField repeatPasswordInputField = new JPasswordField(15);
     private final SignupController signupController;
+
+    private final ClearController clearController;
 
     private final JButton signUp;
     private final JButton cancel;
@@ -28,11 +36,15 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     // TODO Note: this is the new JButton for clearing the users file
     private final JButton clear;
 
-    public SignupView(SignupController controller, SignupViewModel signupViewModel) {
+    public SignupView(SignupController signupController, SignupViewModel signupViewModel,
+                      ClearController clearController, ClearViewModel clearViewModel) {
 
-        this.signupController = controller;
+        this.signupController = signupController;
         this.signupViewModel = signupViewModel;
         signupViewModel.addPropertyChangeListener(this);
+        this.clearController = clearController;
+        this.clearViewModel = clearViewModel;
+        clearViewModel.addPropertyChangeListener(this);
 
         JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -54,6 +66,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         //      a CLEAR_BUTTON_LABEL constant which is defined in the SignupViewModel class.
         //      You need to add this "clear" button to the "buttons" panel.
         clear = new JButton(SignupViewModel.CLEAR_BUTTON_LABEL);
+        buttons.add(clear);
 
         signUp.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -79,7 +92,9 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-
+                        if (e.getSource().equals(clear)) {
+                            clearController.execute();
+                        }
                     }
                 }
         );
@@ -169,9 +184,26 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SignupState state = (SignupState) evt.getNewValue();
-        if (state.getUsernameError() != null) {
-            JOptionPane.showMessageDialog(this, state.getUsernameError());
+        if ((evt.getNewValue()) instanceof SignupState) {
+
+            SignupState signupState = (SignupState) evt.getNewValue();
+
+            if (signupState.getUsernameError() != null) {
+                JOptionPane.showMessageDialog(this, signupState.getUsernameError());
+            }
         }
+        else {
+            ClearState clearState = (ClearState) evt.getNewValue();
+
+            if (clearState.getClearError() == null) {
+                List<String> users = clearState.getUsers();
+                String userList = "";
+                for (String user : users) {
+                    userList = userList + user + "\n";
+                }
+                JOptionPane.showMessageDialog(this, userList);
+            }
+        }
+
     }
 }
