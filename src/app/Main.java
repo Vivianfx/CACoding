@@ -53,11 +53,8 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        InMemoryUserDataAccessObject clearUserDataAccessObject;
-        clearUserDataAccessObject = new InMemoryUserDataAccessObject();
-
         SignupView signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel,
-                userDataAccessObject, clearViewModel, clearUserDataAccessObject);
+                userDataAccessObject, clearViewModel, userDataAccessObject);
         views.add(signupView, signupView.viewName);
 
         LoginView loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);

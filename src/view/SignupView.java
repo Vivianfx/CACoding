@@ -197,9 +197,11 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
             if (clearState.getClearError() == null) {
                 List<String> users = clearState.getUsers();
+                System.out.println(users);
                 String userList = "";
                 for (String user : users) {
                     userList = userList + user + "\n";
+                    System.out.println(user);
                 }
                 JOptionPane.showMessageDialog(this, userList);
             }
