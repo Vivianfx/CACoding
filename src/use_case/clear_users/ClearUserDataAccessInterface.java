@@ -7,4 +7,5 @@ public interface ClearUserDataAccessInterface {
     List<String> getUsers();
 
     void deleteAll();
+
 }

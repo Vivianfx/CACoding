@@ -92,7 +92,6 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface, 
      */
     @Override
     public boolean existsByName(String identifier) {
-        System.out.println(accounts.keySet());
         return accounts.containsKey(identifier);
     }
 
@@ -102,6 +101,9 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface, 
     }
 
     @Override
-    public void deleteAll() { accounts.clear(); }
+    public void deleteAll() {
+        accounts.clear();
+        this.save();
+    }
 
 }
