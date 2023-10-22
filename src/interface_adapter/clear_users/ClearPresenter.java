@@ -4,7 +4,6 @@ import interface_adapter.ViewManagerModel;
 import use_case.clear_users.ClearOutputBoundary;
 import use_case.clear_users.ClearOutputData;
 
-import java.util.List;
 
 public class ClearPresenter implements ClearOutputBoundary {
 
